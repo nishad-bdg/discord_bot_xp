@@ -18,6 +18,7 @@ class MyEvents(commands.Cog):
         await cm.CustomMethods(self.bot).add_xp(message.author.id,message.content,xp)
         if cm.GETXP:
             await message.channel.send(f"Congratulation {message.author} you got new xp : {xp}")
+            cm.GETXP = False
 
        
 def setup(bot):

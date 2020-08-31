@@ -17,6 +17,7 @@ class CustomMethods(commands.Cog):
         user_query = "SELECT * FROM xp_table WHERE user_id = %s"
         r = await self.bot.db.fetch(user_query,user_id)
         if r is not None:
+            print("User found")
             #if user found
             # we will go for the last xp slop for this particular user
             user_xp_query = "SELECT * FROM xp_table WHERE user_id = %s and xp_slot = 1"
@@ -49,3 +50,7 @@ class CustomMethods(commands.Cog):
             print("New user xp added")
             GETXP = True
             await self.bot.db.execute(insert_query,(user_id,message,True,xp,current_time))
+
+        
+
+            
