@@ -13,12 +13,12 @@ class MyEvents(commands.Cog):
         if message.author == self.bot.user:
             return
         xp = random.randint(15,25)
-        await self.add_xp(message.author.id,xp)
+        await self.add_xp(message.author.id,message.content,xp)
         if GETXP:
             await message.channel.send(f"Congratulation {message.author} you got new xp : {xp}")
 
     # add xp function
-    async def add_xp(self,user_id,xp):
+    async def add_xp(self,user_id,message,xp):
         global GETXP
         current_time = datetime.utcnow()
         #user query
@@ -43,21 +43,21 @@ class MyEvents(commands.Cog):
                     prev_xp_false_query = "UPDATE xp_table SET xp_slot = 0 WHERE id = %s"
                     x = await self.bot.db.execute(prev_xp_false_query,int(r_xp["id"]))
                     #then creating another record with a xp_slot
-                    new_xp_query = f"INSERT INTO xp_table (user_id,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s)"
+                    new_xp_query = f"INSERT INTO xp_table (user_id,message,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s,%s)"
                     GETXP = True
-                    await self.bot.db.execute(new_xp_query,(user_id,True,xp,current_time))
+                    await self.bot.db.execute(new_xp_query,(user_id,message,True,xp,current_time))
                     
                 else:
                     # creating a new record without xp
-                    noxp_query = f"INSERT INTO xp_table (user_id,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s)"
-                    await self.bot.db.execute(noxp_query,(user_id,False,0,current_time))
+                    noxp_query = f"INSERT INTO xp_table (user_id,message,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s,%s)"
+                    await self.bot.db.execute(noxp_query,(user_id,message,False,0,current_time))
                     print("user is not going to get xp")
                     GETXP = False
         else:
-            insert_query = f"INSERT INTO xp_table (user_id,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s)"
+            insert_query = f"INSERT INTO xp_table (user_id,message,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s,%s)"
             print("New user xp added")
             GETXP = True
-            await self.bot.db.execute(insert_query,(user_id,True,xp,current_time))
+            await self.bot.db.execute(insert_query,(user_id,message,True,xp,current_time))
 
 
     
