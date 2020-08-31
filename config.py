@@ -1,0 +1,10 @@
+TOKEN = 'NzQ0OTUwODM2NDEyNTQ3MDcz.Xzqrhw.tVR8PpU-ZL40ZDw1jRpyRl2uu1E'
+SERVER_ID = 744951360096567297
+PREFIX = "!"
+EXTENSIONS = ["cogs.MyEvents"]
+
+HOST = 'localhost'
+USER = 'root'
+PASSWORD = '12345678'
+DB = 'discord_test'
+
