@@ -3,6 +3,8 @@ from discord.ext import commands
 import config
 import db
 
+
+
 class MyXp(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix = config.PREFIX)
