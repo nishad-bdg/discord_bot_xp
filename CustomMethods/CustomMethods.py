@@ -19,13 +19,13 @@ class CustomMethods(commands.Cog):
         if r is not None:
             print("User found")
             #if user found
-            # we will go for the last xp slop for this particular user
+            # we will go for the last xp slot for this particular user
             user_xp_query = "SELECT * FROM xp_table WHERE user_id = %s and xp_slot = 1"
             r_xp = await self.bot.db.fetch(user_xp_query,user_id)
             # once xp_slot found
             if r_xp is not None:
                 time_diff = current_time - r_xp["created"]
-                # if time difference is less then 60 seconds then user will get new xp
+                # if time difference is less than 60 seconds then user will get new xp
                 print(time_diff.total_seconds())
                 print(type(time_diff.total_seconds()))
 
