@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from datetime import datetime
 import random
-import CustomMethods.CustomMethods as cm
 import utils.UserExperience as ux
 
 

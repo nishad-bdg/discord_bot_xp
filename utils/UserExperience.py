@@ -24,7 +24,7 @@ class UserExperience:
                 print(type(time_diff.total_seconds()))
 
                 if int(time_diff.total_seconds()) >= 60:
-                    print(f"User is going to get new xp {r_xp['id']}")
+                    print(f"User is going to get new xp {xp}")
                     # now going set previous xp_slot to false and create a new xp_slot
                     prev_xp_false_query = "UPDATE xp_table SET xp_slot = 0 WHERE id = %s"
                     x = await self.db.execute(prev_xp_false_query, int(r_xp["id"]))
