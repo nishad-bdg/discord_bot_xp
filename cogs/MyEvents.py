@@ -15,10 +15,10 @@ class MyEvents(commands.Cog):
         if message.author == self.bot.user:
             return
         xp = random.randint(15,25)
-        await cm.CustomMethods(self.bot).add_xp(message.author.id,message.content,xp)
-        if cm.GETXP:
+        is_xp = await cm.CustomMethods(self.bot).add_xp(message.author.id,message.content,xp)
+        if is_xp:
             await message.channel.send(f"Congratulation {message.author} you got new xp : {xp}")
-            cm.GETXP = False
+
 
        
 def setup(bot):

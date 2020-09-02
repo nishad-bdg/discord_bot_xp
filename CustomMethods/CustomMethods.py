@@ -2,7 +2,6 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 
-GETXP = False
 
 class CustomMethods(commands.Cog):
     def __init__(self,bot):
@@ -10,7 +9,6 @@ class CustomMethods(commands.Cog):
     
      # add xp function
     async def add_xp(self,user_id,message,xp):
-        global GETXP
         current_time = datetime.utcnow()
         #user query
         user_id = str(user_id)
@@ -36,20 +34,21 @@ class CustomMethods(commands.Cog):
                     x = await self.bot.db.execute(prev_xp_false_query,int(r_xp["id"]))
                     #then creating another record with a xp_slot
                     new_xp_query = f"INSERT INTO xp_table (user_id,message,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s,%s)"
-                    GETXP = True
                     await self.bot.db.execute(new_xp_query,(user_id,message,True,xp,current_time))
+                    return True
                     
                 else:
                     # creating a new record without xp
                     noxp_query = f"INSERT INTO xp_table (user_id,message,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s,%s)"
                     await self.bot.db.execute(noxp_query,(user_id,message,False,0,current_time))
                     print("user is not going to get xp")
-                    GETXP = False
+                    return False
         else:
             insert_query = f"INSERT INTO xp_table (user_id,message,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s,%s)"
             print("New user xp added")
             GETXP = True
             await self.bot.db.execute(insert_query,(user_id,message,True,xp,current_time))
+            return True
 
         
 
