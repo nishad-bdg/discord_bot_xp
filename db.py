@@ -28,7 +28,6 @@ class DB:
                 return r, cur.lastrowid
 
     async def fetch(self, query, args=None, *, fetchall=False):
-        print("The fetch function triggered")
         async with self.pool.acquire() as conn:
             async with conn.cursor(aiomysql.DictCursor) as cur:
                 await cur.execute(query, args=args)

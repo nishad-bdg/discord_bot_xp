@@ -4,43 +4,64 @@ from datetime import datetime
 class UserExperience:
     def __init__(self,db):
         self.db = db
-    async def add_xp(self, user_id, message, xp):
+    
+    
+    async def add_xp(self,user_id,xp):
+        xp = int(xp)
         current_time = datetime.utcnow()
         # user query
         user_id = str(user_id)
-        user_query = "SELECT * FROM xp_table WHERE user_id = %s"
-        r = await self.db.fetch(user_query, user_id)
-        if r is not None:
+        user_query = "SELECT * FROM user_xp WHERE user_id = %s"
+        user = await self.db.fetch(user_query, user_id)
+        #if user found
+        if user is not None:
             print("User found")
-            # if user found
-            # we will go for the last xp slot for this particular user
-            user_xp_query = "SELECT * FROM xp_table WHERE user_id = %s and xp_slot = 1"
-            r_xp = await self.db.fetch(user_xp_query, user_id)
-            # once xp_slot found
-            if r_xp is not None:
-                time_diff = current_time - r_xp["created"]
-                # if time difference is less than 60 seconds then user will get new xp
-                print(time_diff.total_seconds())
-                print(type(time_diff.total_seconds()))
-
-                if int(time_diff.total_seconds()) >= 60:
-                    print(f"User is going to get new xp {xp}")
-                    # now going set previous xp_slot to false and create a new xp_slot
-                    prev_xp_false_query = "UPDATE xp_table SET xp_slot = 0 WHERE id = %s"
-                    x = await self.db.execute(prev_xp_false_query, int(r_xp["id"]))
-                    # then creating another record with a xp_slot
-                    new_xp_query = f"INSERT INTO xp_table (user_id,message,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s,%s)"
-                    await self.db.execute(new_xp_query, (user_id, message, True, xp, current_time))
-                    return True
-
-                else:
-                    # creating a new record without xp
-                    noxp_query = f"INSERT INTO xp_table (user_id,message,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s,%s)"
-                    await self.db.execute(noxp_query, (user_id, message, False, 0, current_time))
-                    print("user is not going to get xp")
-                    return False
+            time_diff = current_time - user["created"]
+            # if time difference is less than 60 seconds then user will get new xp
+            if int(time_diff.total_seconds()) >= 60:
+                print(f"User is going to get new xp {xp}")
+                # now going set previous xp_slot to false and create a new xp_slot
+                new_xp = int(user["xp"]) + xp
+                prev_xp_false_query = "UPDATE user_xp SET xp = %s, created = %s WHERE id = %s"
+                x = await self.db.execute(prev_xp_false_query, (new_xp,current_time,user["id"]))
+                return True
+            else:
+                # user will not going to get any xp's
+                print("User will not get any xps")
+                return False
         else:
-            insert_query = f"INSERT INTO xp_table (user_id,message,xp_slot,xp_value,created) VALUES (%s,%s,%s,%s,%s)"
+            level = 0
+            insert_query = f"INSERT INTO user_xp (user_id,xp,level,created) VALUES (%s,%s,%s,%s)"
             print("New user xp added")
-            await self.db.execute(insert_query, (user_id, message, True, xp, current_time))
+            await self.db.execute(insert_query, (user_id,xp,level,current_time))
             return True
+
+
+    async def user_level(self,user_id,xp):
+        user_query = "SELECT * FROM user_xp WHERE user_id = %s"
+        user = await self.db.fetch(user_query,user_id)
+        current_level = user["level"]
+        print(f"current level : {current_level}")
+        user_xp = user["xp"]
+        new_level = user_xp//600
+        print(f"new level {new_level}")
+
+        if new_level > current_level:
+            level_query = "UPDATE user_xp SET level = %s WHERE id = %s"
+            await self.db.execute(level_query,(new_level,user["id"]))
+            return True
+        else:
+            return False 
+
+              
+
+        
+        
+        
+
+
+
+
+
+    
+
