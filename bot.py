@@ -16,6 +16,7 @@ class MyXp(commands.Bot):
     async def on_ready(self):
         print(f"We logegd in as : {self.user}")
         print(f"version : {discord.__version__}")
+    
 
     def get_guild(self):
         return self.get_guild(config.SERVER_ID)
