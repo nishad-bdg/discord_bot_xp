@@ -29,10 +29,13 @@ class UserExperience:
         return user_obj
 
     async def create_new_user(self):
-        level = 0
-        user_insert = f"INSERT INTO user_xp (user_id,xp,level,created) VALUES (%s,%s,%s,%s)"
-        await self.db.execute(user_insert, (self.message.author.id, self.xp, level, self.current_time))
-        await self.message.channel.send(f"{self.message.author} Congratulations we have got {self.xp} xp")
+        try:
+            level = 0
+            user_insert = f"INSERT INTO user_xp (user_id,xp,level,created) VALUES (%s,%s,%s,%s)"
+            await self.db.execute(user_insert, (self.message.author.id, self.xp, level, self.current_time))
+            await self.message.channel.send(f"{self.message.author} Congratulations we have got {self.xp} xp")
+        except Exception as e:
+            print(e)
 
     async def update_user_xp_slot(self):
         queryset = f"UPDATE user_xp SET xp = %s, level= %s,created = %s WHERE id = %s"
