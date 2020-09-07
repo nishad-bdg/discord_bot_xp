@@ -56,5 +56,4 @@ class UserExperience:
                 xp_update = await self.update_user_xp_slot()
                 await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
 
-    async def user_level(self):
-        pass
+    
