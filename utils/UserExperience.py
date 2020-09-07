@@ -25,13 +25,14 @@ class UserExperience:
         user_obj = await self.db.fetch(user_query, self.message.author.id)
         # if user obj is not found then create automatically
         if user_obj is None:
-            level = 0
-            user_insert = f"INSERT INTO user_xp (user_id,xp,level,created) VALUES (%s,%s,%s,%s)"
-            user_obj = await self.db.execute(user_insert, (self.message.author.id, self.xp, level, self.current_time))
-            # await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
-            await self.message.channel.send(f"{self.message.author} Congratulations you have got {self.xp} xp")
-            user_obj = None
+            await self.create_new_user()
         return user_obj
+
+    async def create_new_user(self):
+        level = 0
+        user_insert = f"INSERT INTO user_xp (user_id,xp,level,created) VALUES (%s,%s,%s,%s)"
+        await self.db.execute(user_insert, (self.message.author.id, self.xp, level, self.current_time))
+        await self.message.channel.send(f"{self.message.author} Congratulations we have got {self.xp} xp")
 
     async def update_user_xp_slot(self):
         queryset = f"UPDATE user_xp SET xp = %s, level= %s,created = %s WHERE id = %s"
