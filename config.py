@@ -1,7 +1,8 @@
 TOKEN = 'NzQ0OTUwODM2NDEyNTQ3MDcz.Xzqrhw.tVR8PpU-ZL40ZDw1jRpyRl2uu1E'
 SERVER_ID = 744951360096567297
+CHANNEL_ID = 744951360096567300
 PREFIX = "!"
-EXTENSIONS = ["cogs.MyEvents"]
+EXTENSIONS = ["cogs.MyEvents","cogs.MyCommands"]
 
 HOST = 'localhost'
 USER = 'root'

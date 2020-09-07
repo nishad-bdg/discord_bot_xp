@@ -1,67 +1,60 @@
 from datetime import datetime
+import config
+import asyncio
 
 
 class UserExperience:
-    def __init__(self,db):
+    __slots__ = ['db', 'user_id', 'xp', 'bot']
+
+    def __init__(self, db, user_id, xp, bot):
         self.db = db
-    
-    
-    async def add_xp(self,user_id,xp):
-        xp = int(xp)
-        current_time = datetime.utcnow()
-        # user query
-        user_id = str(user_id)
+        self.user_id = user_id
+        self.xp = xp
+        self.bot = bot
+
+    @property
+    def current_time(self):
+        return datetime.utcnow()
+
+    @property
+    def channel_id(self):
+        return self.bot.get_channel(config.CHANNEL_ID)
+
+    async def user_obj(self):
         user_query = "SELECT * FROM user_xp WHERE user_id = %s"
-        user = await self.db.fetch(user_query, user_id)
-        #if user found
-        if user is not None:
-            print("User found")
-            time_diff = current_time - user["created"]
-            # if time difference is less than 60 seconds then user will get new xp
-            if int(time_diff.total_seconds()) >= 60:
-                print(f"User is going to get new xp {xp}")
-                # now going set previous xp_slot to false and create a new xp_slot
-                new_xp = int(user["xp"]) + xp
-                prev_xp_false_query = "UPDATE user_xp SET xp = %s, created = %s WHERE id = %s"
-                x = await self.db.execute(prev_xp_false_query, (new_xp,current_time,user["id"]))
-                return True
-            else:
-                # user will not going to get any xp's
-                print("User will not get any xps")
-                return False
-        else:
+        user_obj = await self.db.fetch(user_query, self.user_id)
+        # if user obj is not found then create automatically
+        if user_obj is None:
             level = 0
-            insert_query = f"INSERT INTO user_xp (user_id,xp,level,created) VALUES (%s,%s,%s,%s)"
-            print("New user xp added")
-            await self.db.execute(insert_query, (user_id,xp,level,current_time))
-            return True
+            user_insert = f"INSERT INTO user_xp (user_id,xp,level,created) VALUES (%s,%s,%s,%s)"
+            user_obj = await self.db.execute(user_insert, (self.user_id, self.xp, level, self.current_time))
+            await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
+            user_obj = None
+        return user_obj
 
-
-    async def user_level(self,user_id,xp):
-        user_query = "SELECT * FROM user_xp WHERE user_id = %s"
-        user = await self.db.fetch(user_query,user_id)
-        current_level = user["level"]
-        print(f"current level : {current_level}")
-        user_xp = user["xp"]
-        new_level = user_xp//600
-        print(f"new level {new_level}")
-
+    async def update_user_xp_slot(self):
+        queryset = f"UPDATE user_xp SET xp = %s, level= %s,created = %s WHERE id = %s"
+        user_obj = await self.user_obj()
+        new_xp = user_obj["xp"] + self.xp
+        current_level = user_obj["level"]
+        new_level = new_xp//600
         if new_level > current_level:
-            level_query = "UPDATE user_xp SET level = %s WHERE id = %s"
-            await self.db.execute(level_query,(new_level,user["id"]))
-            return True
+            await self.db.execute(queryset, (new_xp, new_level, self.current_time, user_obj["id"]))
+            await self.channel_id.send(f"You have reached to level: {new_level}")
         else:
-            return False 
+            await self.db.execute(queryset, (new_xp, current_level, self.current_time, user_obj["id"]))
 
-              
+    async def add_user_xp(self):
+        user_obj = await self.user_obj()
+        if user_obj is not None:
+            # calculate the time difference
+            time_diff = (self.current_time -
+                         user_obj["created"]).total_seconds()
 
-        
-        
-        
+            print(time_diff)
+            if time_diff >= 60:
+                xp_update = await self.update_user_xp_slot()
+                await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
 
-
-
-
-
-    
-
+    async def user_level(self):
+        pass
