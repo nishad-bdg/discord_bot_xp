@@ -16,7 +16,7 @@ class MyEvents(commands.Cog):
             return
         user_id = message.author.id
         xp = 300
-        await ux.UserExperience(self.bot.db,user_id,xp,self.bot).add_user_xp()
+        await ux.UserExperience(self.bot.db,message,xp,self.bot).add_user_xp()
 
 def setup(bot):
     bot.add_cog(MyEvents(bot))

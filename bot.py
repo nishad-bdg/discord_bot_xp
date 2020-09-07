@@ -17,7 +17,7 @@ class MyXp(commands.Bot):
         print(f"We logegd in as : {self.user}")
         print(f"version : {discord.__version__}")
     
-
+    @property
     def get_guild(self):
         return self.get_guild(config.SERVER_ID)
 
