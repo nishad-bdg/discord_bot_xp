@@ -33,7 +33,7 @@ class UserExperience:
             level = 0
             user_insert = f"INSERT INTO user_xp (user_id,xp,level,created) VALUES (%s,%s,%s,%s)"
             await self.db.execute(user_insert, (self.message.author.id, self.xp, level, self.current_time))
-            await self.message.channel.send(f"{self.message.author} Congratulations we have got {self.xp} xp")
+            await self.message.channel.send(f"{self.message.author.mention} Congratulations we have got {self.xp} xp")
         except Exception as e:
             print(e)
 
@@ -46,7 +46,7 @@ class UserExperience:
         if new_level > current_level:
             await self.db.execute(queryset, (new_xp, new_level, self.current_time, user_obj["id"]))
             #await self.channel_id.send(f"{self.bot.user} You just advanced to level {new_level}!")
-            await self.message.channel.send(f"{self.message.author} You just advanced to level {new_level}!")
+            await self.message.channel.send(f"{self.message.author.mention} You just advanced to level {new_level}!")
         else:
             await self.db.execute(queryset, (new_xp, current_level, self.current_time, user_obj["id"]))
 
@@ -61,7 +61,7 @@ class UserExperience:
             print(time_diff)
             if time_diff >= 60:
                 #await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
-                await self.message.channel.send(f"Congratulations you have got {self.xp} xp")
+                await self.message.channel.send(f"{self.message.author.mention}Congratulations you have got {self.xp} xp")
                 xp_update = await self.update_user_xp_slot()
 
     

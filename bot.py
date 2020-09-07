@@ -12,14 +12,11 @@ class MyXp(commands.Bot):
     def load_extensions(self):
         for cog in config.EXTENSIONS:
             self.load_extension(cog)
-
-    async def on_ready(self):
-        print(f"We logegd in as : {self.user}")
-        print(f"version : {discord.__version__}")
+   
     
-    @property
-    def get_guild(self):
-        return self.get_guild(config.SERVER_ID)
+    # @property
+    # def get_guild(self):
+    #     return self.get_guild(config.SERVER_ID)
 
     def run(self):
         super().run(config.TOKEN)
