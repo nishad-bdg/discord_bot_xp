@@ -14,7 +14,6 @@ class MyEvents(commands.Cog):
     async def on_message(self,message):
         if message.author == self.bot.user:
             return
-        user_id = message.author.id
         xp = 300
         await ux.UserExperience(self.bot.db,message,xp,self.bot).add_user_xp()
 
