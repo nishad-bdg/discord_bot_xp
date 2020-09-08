@@ -22,9 +22,8 @@ class MyEvents(commands.Cog):
         if message.author == self.bot.user:
             return
         xp = 300
-        x = self.bot.get_guild(config.SERVER_ID)
-        for member in x.members:
-            print(f"{member}")
+        users = self.bot.get_guild(config.SERVER_ID)
+
         await ux.UserExperience(self.bot.db, message, xp, self.bot).add_user_xp()
 
 

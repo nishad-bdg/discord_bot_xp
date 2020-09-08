@@ -61,7 +61,7 @@ class UserExperience:
             print(time_diff)
             if time_diff >= 60:
                 #await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
-                await self.message.channel.send(f"{self.message.author.mention}Congratulations you have got {self.xp} xp")
+                await self.message.channel.send(f"{self.message.author.mention} Congratulations you have got {self.xp} xp")
                 xp_update = await self.update_user_xp_slot()
 
     
