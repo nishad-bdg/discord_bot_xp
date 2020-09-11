@@ -4,6 +4,7 @@ from datetime import datetime
 import random
 import utils.UserExperience as ux
 import config
+import cProfile
 
 
 class MyEvents(commands.Cog):
@@ -16,7 +17,6 @@ class MyEvents(commands.Cog):
     async def on_ready(self):
         print(f"We logegd in as : {self.bot.user}")
         print(f"version : {discord.__version__}")
-
 
     @commands.Cog.listener()
     async def on_message(self, message):
