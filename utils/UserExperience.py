@@ -15,13 +15,17 @@ class UserExperience:
         self.xp = xp
         self.bot = bot
 
-    @property
-    def current_time(self):
-        return datetime.utcnow()
-
-    @property
-    def channel_id(self):
-        return self.bot.get_channel(config.CHANNEL_ID)
+    async def add_user_xp(self):
+        try:
+            last_xp_time = user_cache[self.message.author.id]
+            await self.time_diff(last_xp_time)
+            print("dictionary block is working")
+        except:
+            print("Except working")
+            user_obj = await self.user_obj()
+            if user_obj is not None:
+                await self.time_diff(user_obj["created"])
+                # calculate the time difference
 
     async def user_obj(self):
         user_query = "SELECT * FROM user_xp WHERE user_id = %s"
@@ -32,7 +36,7 @@ class UserExperience:
         else:
             user_cache[self.message.author.id] = user_obj["created"]
         return user_obj
-    
+
     async def create_new_user(self):
         try:
             level = 0
@@ -41,9 +45,9 @@ class UserExperience:
             await self.message.author.send(
                 f"{self.message.author.mention} Congratulations we have got {self.xp} xp"
             )
-            #adding to dictionary
+            # adding to dictionary
             user_cache[self.message.author.id] = self.current_time
-            
+
         except Exception as e:
             print(e)
 
@@ -60,37 +64,34 @@ class UserExperience:
             )
         else:
             await self.db.execute(queryset, (new_xp, current_level, self.current_time, user_obj["id"]))
-        #update user cache
+        # update user cache
         user_cache[self.message.author.id] = self.current_time
-    
-    async def add_user_xp(self):
-        try:
-            last_xp_time = user_cache[self.message.author.id]
-            await self.time_diff(last_xp_time)
-            print("dictionary block is working")
-        except:
-            print("Except working")
-            user_obj = await self.user_obj()
-            if user_obj is not None:
-                await self.time_diff(user_obj["created"])
-                # calculate the time difference
-                
-    #time difference function
-    async def time_diff(self,user_last_xp_time):
+
+    # time difference function
+
+    async def time_diff(self, user_last_xp_time):
         time_diff = (self.current_time - user_last_xp_time).total_seconds()
         print(time_diff)
         if time_diff >= 60:
             # await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
             await self.message.author.send(f"{self.message.author.mention} Congratulations you have got {self.xp} xp")
             xp_update = await self.update_user_xp_slot()
-            #clear user chache
+            # clear user chache
             self.clear_user_chache()
-            
-    #if the dict length is more than 200 then reset the clear chache
+
+    # if the dict length is more than 200 then reset the clear chache
     def clear_user_chache(self):
         global user_cache
         if len(user_cache) >= 200:
             user_cache = {}
+
+    @property
+    def current_time(self):
+        return datetime.utcnow()
+
+    @property
+    def channel_id(self):
+        return self.bot.get_channel(config.CHANNEL_ID)
                 
     
     
