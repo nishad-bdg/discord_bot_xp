@@ -26,6 +26,16 @@ class UserExperience:
             if user_obj is not None:
                 await self.time_diff(user_obj["created"])
                 # calculate the time difference
+    # time difference function
+    async def time_diff(self, user_last_xp_time):
+        time_diff = (self.current_time - user_last_xp_time).total_seconds()
+        print(time_diff)
+        if time_diff >= 60:
+            # await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
+            await self.message.author.send(f"{self.message.author.mention} Congratulations you have got {self.xp} xp")
+            xp_update = await self.update_user_xp_slot()
+            # clear user chache
+            self.clear_user_chache()
 
     async def user_obj(self):
         user_query = "SELECT * FROM user_xp WHERE user_id = %s"
@@ -67,18 +77,7 @@ class UserExperience:
         # update user cache
         user_cache[self.message.author.id] = self.current_time
 
-    # time difference function
-
-    async def time_diff(self, user_last_xp_time):
-        time_diff = (self.current_time - user_last_xp_time).total_seconds()
-        print(time_diff)
-        if time_diff >= 60:
-            # await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
-            await self.message.author.send(f"{self.message.author.mention} Congratulations you have got {self.xp} xp")
-            xp_update = await self.update_user_xp_slot()
-            # clear user chache
-            self.clear_user_chache()
-
+    
     # if the dict length is more than 200 then reset the clear chache
     def clear_user_chache(self):
         global user_cache
