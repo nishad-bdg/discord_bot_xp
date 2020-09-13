@@ -15,6 +15,7 @@ class UserExperience:
         self.xp = xp
         self.bot = bot
 
+    #add user xp
     async def add_user_xp(self):
         try:
             last_xp_time = user_cache[self.message.author.id]
