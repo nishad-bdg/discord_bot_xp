@@ -47,6 +47,7 @@ class UserExperience:
             user_cache[self.message.author.id] = user_obj["created"]
         return user_obj
 
+    # create new user
     async def create_new_user(self):
         try:
             level = 0
@@ -61,6 +62,7 @@ class UserExperience:
         except Exception as e:
             print(e)
 
+    # update level and xp
     async def update_user_xp_slot(self):
         queryset = f"UPDATE user_xp SET xp = %s, level= %s,created = %s WHERE id = %s"
         user_obj = await self.user_obj()
