@@ -83,7 +83,13 @@ class UserExperience:
             # await self.channel_id.send(f"Congratulations you have got {self.xp} xp")
             await self.message.author.send(f"{self.message.author.mention} Congratulations you have got {self.xp} xp")
             xp_update = await self.update_user_xp_slot()
+            self.clear_user_chache()
 
+    def clear_user_chache(self):
+        global user_cache
+        if len(user_cache) >= 200:
+            user_cache = {}
+                
     
     
     
