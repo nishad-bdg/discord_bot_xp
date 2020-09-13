@@ -10,7 +10,6 @@ class MyCommands(commands.Cog):
     @commands.cooldown(1,30,commands.BucketType.user)
     async def hello(self,ctx):
         await ctx.channel.send("Hi")
-
-
+        
 def setup(bot):
     bot.add_cog(MyCommands(bot))

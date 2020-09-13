@@ -26,6 +26,7 @@ class MyEvents(commands.Cog):
         users = self.bot.get_guild(config.SERVER_ID)
         await ux.UserExperience(self.bot.db, message, xp, self.bot).add_user_xp()
 
+    
 
 def setup(bot):
     bot.add_cog(MyEvents(bot))
