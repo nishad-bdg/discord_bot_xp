@@ -30,7 +30,6 @@ class UserExperience:
         if user_obj is None:
             await self.create_new_user()
         else:
-            print("user found")
             user_cache[self.message.author.id] = user_obj["created"]
         return user_obj
     
@@ -65,7 +64,6 @@ class UserExperience:
         user_cache[self.message.author.id] = self.current_time
     
     async def add_user_xp(self):
-        print(user_cache)
         try:
             last_xp_time = user_cache[self.message.author.id]
             await self.time_diff(last_xp_time)
